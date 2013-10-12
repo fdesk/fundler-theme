@@ -924,56 +924,6 @@ function crowdfunding_support() {
 }
 add_action( 'after_setup_theme', 'crowdfunding_support' );
 
-function fundler_campaign_contribute_options( $prices, $type, $download_id ) {
-	$campaign = new ATCF_Campaign( $download_id );
-?>
-	<div class="edd_price_options <?php echo $campaign->is_active() ? 'active' : 'expired'; ?>">
-		<ul>
-			<?php foreach ( $prices as $key => $price ) : ?>
-				<?php
-		$amount  = $price[ 'amount' ];
-	$limit   = isset ( $price[ 'limit' ] ) ? $price[ 'limit' ] : '';
-	$bought  = isset ( $price[ 'bought' ] ) ? $price[ 'bought' ] : 0;
-	$allgone = false;
-
-	if ( $bought == absint( $limit ) && '' != $limit )
-		$allgone = true;
-
-	if ( edd_use_taxes() && edd_taxes_on_prices() )
-		$amount += edd_calculate_tax( $amount );
-?>
-				<li <?php if ( $allgone ) : ?>class="inactive"<?php endif; ?> data-price="<?php echo edd_sanitize_amount( edd_format_amount( $amount ) ); ?>">
-					<div class="clear">
-						<h3><label><?php
-	if ( $campaign->is_active() )
-		if ( ! $allgone )
-			printf(
-				'<input type="radio" name="edd_options[price_id][]" id="%1$s" class="%2$s edd_price_options_input" value="%3$s"/>',
-				esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
-				esc_attr( 'edd_price_option_' . $download_id ),
-				esc_attr( $key )
-			);
-		?> <?php printf( __( 'Pledge %s', 'fundify' ), edd_currency_filter( edd_format_amount( $amount ) ) ); ?></label></h3>
-
-						<div class="backer-count">
-							<i class="icon-user"></i> <?php printf( _n( '%d Backer', '%d Backers', $bought, 'number of backers', 'fundify' ), $bought ); ?>
-
-							<?php if ( '' != $limit && ! $allgone ) : ?>
-								<small class="limit"><?php printf( __( 'Limited (%d of %d left)', 'fundify' ), $limit - $bought, $limit ); ?></small>
-							<?php elseif ( $allgone ) : ?>
-								<small class="gone"><?php _e( 'All gone!', 'fundify' ); ?></small>
-							<?php endif; ?>
-						</div>
-					</div>
-					<?php echo wpautop( esc_html( $price[ 'name' ] ) ); ?>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-	</div>
-<?php
-}
-add_action( 'atcf_campaign_contribute_options', 'fundler_campaign_contribute_options', 10, 3 );
-
 function get_all_campaign_ids() {
 	return get_posts( array(
 			'numberposts'   => -1, // get all posts.
