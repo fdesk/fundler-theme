@@ -1,7 +1,7 @@
 <?php
 /*
 Author: MandLoys
-URL: http://themeforest.net/user/MandLoys
+URL: http://www.mandloys.com
 */
 require_once 'library/fundler.php';
 add_image_size( '360', 360, 360, true );
@@ -679,10 +679,10 @@ function my_followers_count( $screenName ) {
     $consumerKey = ot_get_option( 'twitter_consumer_key' );
     $consumerSecret = ot_get_option( 'twitter_consumer_secret' );
     $token = get_option('cfTwitterToken');
- 
+
     // get follower count from cache
     $numberOfFollowers = get_transient('cfTwitterFollowers');
- 
+
     // cache version does not exist or expired
     if (false === $numberOfFollowers) {
         // getting new auth bearer only if we don't have one
@@ -690,7 +690,7 @@ function my_followers_count( $screenName ) {
             // preparing credentials
             $credentials = $consumerKey . ':' . $consumerSecret;
             $toSend = base64_encode($credentials);
- 
+
             // http post arguments
             $args = array(
                 'method' => 'POST',
@@ -702,12 +702,12 @@ function my_followers_count( $screenName ) {
                 ),
                 'body' => array( 'grant_type' => 'client_credentials' )
             );
- 
+
             add_filter('https_ssl_verify', '__return_false');
             $response = wp_remote_post('https://api.twitter.com/oauth2/token', $args);
- 
+
             $keys = json_decode(wp_remote_retrieve_body($response));
- 
+
             if($keys) {
                 // saving token to wp_options table
                 update_option('cfTwitterToken', $keys->access_token);
@@ -722,11 +722,11 @@ function my_followers_count( $screenName ) {
                 'Authorization' => "Bearer $token"
             )
         );
- 
+
         add_filter('https_ssl_verify', '__return_false');
         $api_url = "https://api.twitter.com/1.1/users/show.json?screen_name=$screenName";
         $response = wp_remote_get($api_url, $args);
- 
+
         if (!is_wp_error($response)) {
             $followers = json_decode(wp_remote_retrieve_body($response));
             $numberOfFollowers = $followers->followers_count;
@@ -736,12 +736,12 @@ function my_followers_count( $screenName ) {
             // uncomment below to debug
             //die($response->get_error_message());
         }
- 
+
         // cache for an hour
         set_transient('cfTwitterFollowers', $numberOfFollowers, 1*60*60);
         update_option('cfNumberOfFollowers', $numberOfFollowers);
     }
- 
+
     return $numberOfFollowers;
 }
 
@@ -897,7 +897,7 @@ add_shortcode('checklist', 'checklist');
 function featured($atts, $content = null) {
    return '<div class="shortcode_featured"><div class="shortcode_featured2">' . do_shortcode($content) . '</div></div>';
 }
-add_shortcode('featured', 'featured'); 
+add_shortcode('featured', 'featured');
 
 
 /************* SEARCH FORM LAYOUT *****************/
@@ -1071,6 +1071,16 @@ function my_theme_register_required_plugins() {
 		array(
 			'name'                  => 'OptionTree',
 			'slug'                  => 'option-tree',
+			'required'              => true,
+		),
+		array(
+			'name'                  => 'Easy Digital Downloads',
+			'slug'                  => 'easy-digital-downloads',
+			'required'              => true,
+		),
+		array(
+			'name'                  => 'Crowdfunding by Astoundify',
+			'slug'                  => 'appthemer-crowdfunding',
 			'required'              => true,
 		),
 
