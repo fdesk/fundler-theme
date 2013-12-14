@@ -9,6 +9,8 @@ If you have a minute and would like to contribute, help us with the development!
 
 If you need support, we have a forum for that: http://www.mandloys.com/fundler-free-crowdfunding-wordpress-theme/
 
+View the [Demo](http://www.mandloys.com/wordpress/themes/fundler/ "Fundler Demo").
+
 ChangeLog:
 
 * v1.1 - Oct 12, 2013 - Bugfixes, additional documentation
